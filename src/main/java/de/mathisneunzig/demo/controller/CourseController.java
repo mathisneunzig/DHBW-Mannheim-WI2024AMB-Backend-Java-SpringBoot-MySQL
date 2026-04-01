@@ -26,18 +26,18 @@ import de.mathisneunzig.demo.service.CourseService;
  * They should not contain deep domain logic; this is delegated to services.
  */
 @RestController
-@RequestMapping("/courses")
+@RequestMapping("/courses") // https://localhost:8080/courses
 public class CourseController {
 
 	@Autowired
 	CourseService courseService;
 
-    @GetMapping
+    @GetMapping // GET https://localhost:8080/courses
     public ResponseEntity<List<Course>> getAll() {
     	return new ResponseEntity<>(courseService.getAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}") // GET https://localhost:8080/courses/{id}
     public ResponseEntity<Object> getById(@PathVariable UUID id) {
         try {
             return new ResponseEntity<>(courseService.getById(id), HttpStatus.OK);
@@ -48,7 +48,7 @@ public class CourseController {
         }
     }
 
-    @PostMapping
+    @PostMapping // POST https://localhost:8080/courses
     public ResponseEntity<Object> create(@RequestBody CourseDTO dto) {
         try {
             // Input arrives as DTO, then service/factory converts it to an entity.
@@ -58,7 +58,7 @@ public class CourseController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}") // DELETE https://localhost:8080/courses/{id}
     public ResponseEntity<Object> deleteById(@PathVariable UUID id) {
         try {
         	courseService.deleteById(id);

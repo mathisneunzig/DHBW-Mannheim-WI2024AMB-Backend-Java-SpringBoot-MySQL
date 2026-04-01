@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
@@ -82,11 +83,14 @@ public class User {
 	@ManyToMany
 	@JoinTable(name = "user_course", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
 	private Set<Course> courses = new HashSet<>();
+	
+	@OneToMany(mappedBy = "owner")
+	private Set<Pet> pets = new HashSet<>();
 
 	public User(@NotBlank String userName, @NotBlank String lastName, @NotBlank String firstName,
 			@NotBlank String email, @NotBlank String phoneNr, @NotBlank String password, @NotBlank String street,
 			@NotBlank String houseNr, @NotBlank String zipCode, @NotBlank String city, @NotBlank String country,
-			Set<Course> courses) {
+			Set<Course> courses, Set<Pet> pets) {
 		super();
 		this.userName = userName;
 		this.lastName = lastName;
@@ -100,6 +104,7 @@ public class User {
 		this.city = city;
 		this.country = country;
 		this.courses = courses;
+		this.pets = pets;
 	}
 
 	public User() {
@@ -208,6 +213,14 @@ public class User {
 
 	public void setCourses(Set<Course> courses) {
 		this.courses = courses;
+	}
+
+	public Set<Pet> getPets() {
+		return pets;
+	}
+
+	public void setPets(Set<Pet> pets) {
+		this.pets = pets;
 	}
 
 	@Override
