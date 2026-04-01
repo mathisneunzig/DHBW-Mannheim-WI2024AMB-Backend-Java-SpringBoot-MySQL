@@ -4,6 +4,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,6 +27,10 @@ import jakarta.validation.constraints.NotBlank;
  */
 @Entity
 @Table(name = "users")
+@JsonIdentityInfo(
+    generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "id"
+)
 public class User {
 
 	@Id
@@ -82,9 +90,11 @@ public class User {
      */
 	@ManyToMany
 	@JoinTable(name = "user_course", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
+    @JsonIdentityReference(alwaysAsId = true)
 	private Set<Course> courses = new HashSet<>();
 	
 	@OneToMany(mappedBy = "owner")
+    @JsonIdentityReference(alwaysAsId = true)
 	private Set<Pet> pets = new HashSet<>();
 
 	public User(@NotBlank String userName, @NotBlank String lastName, @NotBlank String firstName,

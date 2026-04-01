@@ -2,6 +2,10 @@ package de.mathisneunzig.demo.entities;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -23,6 +27,10 @@ import jakarta.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "pets")
+@JsonIdentityInfo(
+    generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "id"
+)
 public class Pet {
 
 	@Id
@@ -40,12 +48,13 @@ public class Pet {
 
 	@Column
 	@Enumerated(EnumType.STRING)
-	@NotBlank
+	@NotNull
 	private AnimalType animalType;
 
     @NotNull
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "owner_id", nullable = false)
+    @JsonIdentityReference(alwaysAsId = true)
     private User owner;
 
 	public Pet(@NotBlank String name, @NotBlank String color, @NotBlank AnimalType animalType, @NotNull User owner) {
@@ -97,7 +106,7 @@ public class Pet {
 	@Override
 	public String toString() {
 		return "Pet [id=" + id + ", name=" + name + ", color=" + color + ", animalType=" + animalType + ", owner="
-				+ owner + "]";
+				+ owner.getId() + "]";
 	}
 
 }

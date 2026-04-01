@@ -4,6 +4,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -24,6 +28,10 @@ import jakarta.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "courses")
+@JsonIdentityInfo(
+    generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "id"
+)
 public class Course {
 
 	@Id
@@ -62,6 +70,7 @@ public class Course {
 	@NotNull
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "teacher_id", nullable = false)
+    @JsonIdentityReference(alwaysAsId = true)
 	private Teacher teacher;
 
 	/**
@@ -69,6 +78,7 @@ public class Course {
 	 * The owning side is in {@link User} via its `courses` field.
 	 */
 	@ManyToMany(mappedBy = "courses")
+    @JsonIdentityReference(alwaysAsId = true)
 	private Set<User> users = new HashSet<>();
 
 	public Course(@NotBlank String title, @NotBlank String description, @NotBlank int ects,
@@ -152,7 +162,7 @@ public class Course {
 	@Override
 	public String toString() {
 		return "Course [id=" + id + ", title=" + title + ", description=" + description + ", ects=" + ects
-				+ ", courseType=" + courseType + ", examType=" + examType + ", teacher=" + teacher + ", users=" + users
+				+ ", courseType=" + courseType + ", examType=" + examType + ", teacher=" + teacher.getId() + ", users=" + users
 				+ "]";
 	}
 
